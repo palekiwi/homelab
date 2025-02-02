@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: redis-nc
+  name: redis-nc
+spec:
+  containers:
+    - name: redis
+      image: docker.io/library/redis:latest
+      args:
+        - "redis-server"
+  restartPolicy: Always
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: nc-secret
+data:
+  NEXTCLOUD_ADMIN_PASSWORD: U2dSblBaM2pXcXJYWnFzQ2RXUXhrcU9tUg==
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nc-config
+data:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: nc
+  POSTGRES_HOST: pale
+  REDIS_HOST: redis-nc
+  REDIS_PORT: 6379
+  NEXTCLOUD_ADMIN_USER: pl
+  NEXTCLOUD_TRUSTED_DOMAINS: nc.paradise-liberty.ts.net
+  OVERWRITEPROTOCOL: https
+  OVERWRITECLIURL: ""
+  TRUSTED_PROXIES: 100.73.219.12
+  SMTP_HOST: ""
+  SMTP_SECURE: ""
+  SMTP_PORT: ""
+  SMTP_AUTHTYPE: ""
+  SMTP_NAME: ""
+  SMTP_PASSWORD: ""
+  MAIL_FROM_ADDRESS: ""
+  MAIL_DOMAIN: ""
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: nc
+  name: nc
+spec:
+  containers:
+    - name: nextcloud
+      image: docker.io/library/nextcloud:28.0.2
+      volumeMounts:
+        - mountPath: /var/www/html
+          name: nc-app
+        - mountPath: /var/www/html/config
+          name: nc-config
+        - mountPath: /var/www/html/data
+          name: nc-data
+        - mountPath: /mnt/external
+          name: nc-external
+          readOnly: true
+        - mountPath: /etc/localtime
+          name: etc-localtime
+          readOnly: true
+      envFrom:
+        - configMapRef:
+            name: nc-config
+            optional: false
+        - secretRef:
+            name: nc-secret
+            optional: false
+      ports:
+        - containerPort: 80
+          hostPort: 8088
+  restartPolicy: OnFailure
+  volumes:
+    - name: nc-app
+      hostPath:
+        path: /srv/nc/app
+        type: Directory
+    - name: nc-config
+      hostPath:
+        path: /srv/nc/config
+        type: Directory
+    - name:  nc-data
+      hostPath:
+        path: /srv/nc/data
+        type: Directory
+    - name: nc-external
+      hostPath:
+        path: /srv/nc/external
+        type: Directory
+    - name: etc-localtime
+      hostPath:
+        path: /etc/localtime
+        type: File
