@@ -4,14 +4,10 @@ kind: ConfigMap
 metadata:
   name: pg0
 data:
-  - name: POSTGRES_USER
-    value: postgres
-  - name: POSTGRES_PASSWORD
-    value: postgres
-  - name: POSTGRES_DB
-    value: postgres
-  - name: TZ
-    value: Asia/Taipei
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: postgres
+  TZ: Asia/Taipei
 ---
 apiVersion: v1
 kind: Pod
