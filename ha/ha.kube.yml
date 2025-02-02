@@ -1,0 +1,132 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appdaemon-config
+data:
+  TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxYWQyYzRmMWUxYWU0YmVhOGJjMmQ2ODkzNTk2ZmZhNSIsImlhdCI6MTY3ODg2NDY1NSwiZXhwIjoxOTk0MjI0NjU1fQ.tFUAbDE6Ztxqm2ZKnKmNEn0BV-Ru1_e48HEJZx5YDGU
+  HA_URL: http://localhost:8123
+  DASH_URL: http://localhost:5050
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: ha
+  name: ha
+spec:
+  containers:
+    - name: homeassistant
+      image: ghcr.io/home-assistant/home-assistant:stable
+      volumeMounts:
+        - mountPath: /etc/localtime
+          name: etc-localtime
+          readOnly: true
+        - mountPath: /config
+          name: ha-homeassistant-config
+      ports:
+        - containerPort: 8123
+          hostPort: 8123
+      env:
+        - name: TZ
+          value: Asia/Taipei
+
+    - name: z2m
+      image: docker.io/koenkk/zigbee2mqtt
+      resources:
+      limits:
+        podman.io/device=/dev/ttyUSB0: 1
+      volumeMounts:
+        - mountPath: /etc/localtime
+          name: etc-localtime
+          readOnly: true
+        - mountPath: /run/udev
+          name: run-udev
+          readOnly: true
+        - mountPath: /app/data
+          name: ha-z2m-data
+        - mountPath: /dev/ttyUSB0
+          name: dev-ttyUSB0
+      ports:
+        - containerPort: 8080
+          hostPort: 8080
+      env:
+        - name: TZ
+          value: Asia/Taipei
+
+    - name: mqtt
+      image: docker.io/library/eclipse-mosquitto
+      volumeMounts:
+        - mountPath: /etc/localtime
+          name: etc-localtime
+          readOnly: true
+        - mountPath: /mosquitto/data
+          name: ha-mqtt-data
+        - mountPath: /mosquitto/log
+          name: ha-mqtt-log
+        - mountPath: /mosquitto/config/mosquitto.conf
+          name: ha-mqtt-config
+
+    - name: appdaemon
+      image: docker.io/acockburn/appdaemon:latest
+      volumeMounts:
+        - mountPath: /etc/localtime
+          name: etc-localtime
+          readOnly: true
+        - mountPath: /conf
+          name: ha-appdaemon-conf
+      ports:
+        - containerPort: 5050
+          hostPort: 5050
+      envFrom:
+        - configMapRef:
+            name: appdaemon-config
+            optional: false
+
+  restartPolicy: OnFailure
+  volumes:
+    - name: etc-localtime
+      hostPath:
+        path: /etc/localtime
+        type: File
+
+    - name: run-udev
+      hostPath:
+        path: /run/udev
+        type: Directory
+
+    - name: ha-homeassistant-config
+      hostPath:
+        path: /srv/ha/homeassistant/config
+        type: Directory
+
+    - name: ha-mqtt-config
+      hostPath:
+        path: /srv/ha/mosquitto/config/mosquitto.conf
+        type: File
+
+    - name: ha-mqtt-data
+      hostPath:
+        path: /srv/ha/mosquitto/data
+        type: Directory
+
+    - name: ha-mqtt-log
+      hostPath:
+        path: /srv/ha/mosquitto/log
+        type: Directory
+
+    - name: ha-z2m-data
+      hostPath:
+        path: /srv/ha/zigbee2mqtt/data
+        type: Directory
+
+    - name: ha-appdaemon-conf
+      hostPath:
+        path: /srv/ha/appdaemon/conf
+        type: Directory
+
+    - name: dev-ttyUSB0
+      hostPath:
+        path: /dev/ttyUSB0
+        type: CharDevice
+

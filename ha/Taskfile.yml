@@ -1,0 +1,30 @@
+version: '3'
+
+env:
+  POD: ha
+  SPEC: ha.kube.yml
+
+tasks:
+  destroy:
+    cmds:
+      - systemctl --user disable podman-kube@$(systemd-escape $PWD/$SPEC)
+
+  restart:
+    cmds:
+      - systemctl --user restart podman-kube@$(systemd-escape $PWD/$SPEC)
+
+  setup:
+    cmds:
+      - systemctl --user enable podman-kube@$(systemd-escape $PWD/$SPEC)
+
+  start:
+    cmds:
+      - systemctl --user start podman-kube@$(systemd-escape $PWD/$SPEC)
+
+  status:
+    cmds:
+      - systemctl --user status podman-kube@$(systemd-escape $PWD/$SPEC)
+
+  stop:
+    cmds:
+      - systemctl --user stop podman-kube@$(systemd-escape $PWD/$SPEC)
