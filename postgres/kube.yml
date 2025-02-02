@@ -6,7 +6,7 @@ metadata:
 data:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: postgres
+  POSTGRES_DB: nc
   TZ: Asia/Taipei
 ---
 apiVersion: v1
@@ -26,6 +26,9 @@ spec:
         - configMapRef:
             name: pg0
             optional: false
+      ports:
+        - containerPort: 5432
+          hostPort: 5432
     - name: postgres-exporter
       image: quay.io/prometheuscommunity/postgres-exporter
       volumeMounts:
