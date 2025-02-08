@@ -183,4 +183,4 @@ spec:
     - name: caddy-nc-caddyfile
       configMap:
         defaultMode: 420
-        name: caddy-nc-ggcaddyfile
+        name: caddy-nc-caddyfile
