@@ -1,0 +1,30 @@
+version: '3'
+
+env:
+  SPEC: /srv/kube/caddy-nc.yml
+
+tasks:
+  destroy:
+    cmds:
+      - systemctl --user disable podman-kube@$(systemd-escape $SPEC)
+
+  restart:
+    cmds:
+      - systemctl --user restart podman-kube@$(systemd-escape $SPEC)
+
+  setup:
+    cmds:
+      - cp kube.yml $SPEC 
+      - systemctl --user enable podman-kube@$(systemd-escape $SPEC)
+
+  start:
+    cmds:
+      - systemctl --user start podman-kube@$(systemd-escape $SPEC)
+
+  status:
+    cmds:
+      - systemctl --user status podman-kube@$(systemd-escape $SPEC)
+
+  stop:
+    cmds:
+      - systemctl --user stop podman-kube@$(systemd-escape $SPEC)
