@@ -1,7 +1,5 @@
 [Unit]
 Description=Cron job for nc-nextcloud.
-Requires=podman-kube@-srv-kube-nc.yml.service
-After=podman-kube@-srv-kube-nc.yml.service
 Wants=cron-nc-nextcloud.timer
 
 [Service]
