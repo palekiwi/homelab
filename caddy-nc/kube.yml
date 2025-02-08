@@ -59,7 +59,7 @@ spec:
         - name: TS_AUTH_ONCE
           value: true
         - name: TS_HOSTNAME
-          value: nc.paradise-liberty.ts.net
+          value: nc
         - name: TS_STATE_DIR
           value: /state
 
