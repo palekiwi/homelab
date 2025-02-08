@@ -88,9 +88,9 @@ spec:
       image: docker.io/tailscale/tailscale:latest
       volumeMounts:
         - mountPath: /certs
-          name: caddy-nc-certs"
+          name: caddy-nc-certs
         - mountPath: /state
-          name: caddy-nc-tailscale"
+          name: caddy-nc-tailscale
       env:
         - name: TS_AUTH_ONCE
           value: true
