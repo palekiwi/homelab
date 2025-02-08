@@ -1,35 +1,36 @@
 version: '3'
 
 env:
-  SPEC: kube.yml
+  SPEC: /srv/kube/nc.yml
 
 tasks:
   destroy:
     cmds:
-      - systemctl --user disable podman-kube@$(systemd-escape $PWD/$SPEC)
+      - systemctl --user disable podman-kube@$(systemd-escape $SPEC)
       - systemctl --user disable cron-nc-nextcloud.timer
       - rm ~/.config/systemd/user/cron-nc-nextcloud.timer
       - rm ~/.config/systemd/user/cron-nc-nextcloud.service
 
   restart:
     cmds:
-      - systemctl --user restart podman-kube@$(systemd-escape $PWD/$SPEC)
+      - systemctl --user restart podman-kube@$(systemd-escape $SPEC)
 
   setup:
     cmds:
-      - systemctl --user enable podman-kube@$(systemd-escape $PWD/$SPEC)
+      - cp kube.yml $SPEC 
+      - systemctl --user enable podman-kube@$(systemd-escape $SPEC)
       - cp ./systemd/cron-nc-nextcloud.timer ~/.config/systemd/user/
       - cp ./systemd/cron-nc-nextcloud.service ~/.config/systemd/user/
       - systemctl --user enable cron-nc-nextcloud.timer
 
   start:
     cmds:
-      - systemctl --user start podman-kube@$(systemd-escape $PWD/$SPEC)
+      - systemctl --user start podman-kube@$(systemd-escape $SPEC)
 
   status:
     cmds:
-      - systemctl --user status podman-kube@$(systemd-escape $PWD/$SPEC)
+      - systemctl --user status podman-kube@$(systemd-escape $SPEC)
 
   stop:
     cmds:
-      - systemctl --user stop podman-kube@$(systemd-escape $PWD/$SPEC)
+      - systemctl --user stop podman-kube@$(systemd-escape $SPEC)
