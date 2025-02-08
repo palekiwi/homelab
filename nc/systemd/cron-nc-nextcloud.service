@@ -1,0 +1,12 @@
+[Unit]
+Description=Cron job for nc-nextcloud.
+Requires=podman-kube@-home-pl-homelab-nc-kube.yml.service
+After=podman-kube@-home-pl-homelab-nc-kube.yml.service
+Wants=cron-nc-nextcloud.timer
+
+[Service]
+ExecStart=podman exec -u www-data nc-nextcloud php -f /var/www/html/cron.php
+Type=oneshot
+
+[Install]
+WantedBy=default.target
