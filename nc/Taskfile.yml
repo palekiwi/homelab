@@ -8,6 +8,8 @@ tasks:
   destroy:
     cmds:
       - systemctl --user disable podman-kube@$(systemd-escape $PWD/$SPEC)
+      - rm ~/.config/systemd/user/cron-nc-nextcloud.timer
+      - rm ~/.config/systemd/user/cron-nc-nextcloud.service
 
   restart:
     cmds:
@@ -16,6 +18,8 @@ tasks:
   setup:
     cmds:
       - systemctl --user enable podman-kube@$(systemd-escape $PWD/$SPEC)
+      - cp ./systemd/cron-nc-nextcloud.timer ~/.config/systemd/user/
+      - cp ./systemd/cron-nc-nextcloud.service ~/.config/systemd/user/
 
   start:
     cmds:
