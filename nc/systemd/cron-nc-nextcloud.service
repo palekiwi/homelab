@@ -5,7 +5,7 @@ After=podman-kube@-home-pl-homelab-nc-kube.yml.service
 Wants=cron-nc-nextcloud.timer
 
 [Service]
-ExecStart=podman exec -u www-data nc-nextcloud php -f /var/www/html/cron.php
+ExecStart=/run/current-system/sw/bin/podman exec -u www-data nc-nextcloud php -f /var/www/html/cron.php
 Type=oneshot
 
 [Install]
