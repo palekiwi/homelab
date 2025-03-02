@@ -32,7 +32,7 @@ spec:
           value: Asia/Taipei
 
     - name: z2m
-      image: docker.io/koenkk/zigbee2mqtt
+      image: "docker.io/koenkk/zigbee2mqtt:2.1.1"
       resources:
       limits:
         podman.io/device=/dev/ttyUSB0: 1
