@@ -28,3 +28,11 @@ tasks:
   stop:
     cmds:
       - systemctl --user stop podman-kube@$(systemd-escape $SPEC)
+
+  regen-certs:
+    cmds:
+      - >
+        podman exec caddy-nc-tailscale
+        tailscale cert --cert-file /certs/nc.crt --key-file /certs/nc.key nc.paradise-liberty.ts.net
+      - task: restart
+    desc: "Regenerate Tailscale certificates and restart the pod"
