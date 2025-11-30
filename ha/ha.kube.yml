@@ -31,28 +31,28 @@ spec:
         - name: TZ
           value: Asia/Taipei
 
-    - name: z2m
-      image: "docker.io/koenkk/zigbee2mqtt:2.1.1"
-      resources:
-      limits:
-        podman.io/device=/dev/ttyUSB0: 1
-      volumeMounts:
-        - mountPath: /etc/localtime
-          name: etc-localtime
-          readOnly: true
-        - mountPath: /run/udev
-          name: run-udev
-          readOnly: true
-        - mountPath: /app/data
-          name: ha-z2m-data
-        - mountPath: /dev/ttyUSB0
-          name: dev-ttyUSB0
-      ports:
-        - containerPort: 8080
-          hostPort: 8080
-      env:
-        - name: TZ
-          value: Asia/Taipei
+    # - name: z2m
+    #   image: "docker.io/koenkk/zigbee2mqtt:2.1.1"
+    #   resources:
+    #   limits:
+    #     podman.io/device=/dev/ttyUSB0: 1
+    #   volumeMounts:
+    #     - mountPath: /etc/localtime
+    #       name: etc-localtime
+    #       readOnly: true
+    #     - mountPath: /run/udev
+    #       name: run-udev
+    #       readOnly: true
+    #     - mountPath: /app/data
+    #       name: ha-z2m-data
+    #     - mountPath: /dev/ttyUSB0
+    #       name: dev-ttyUSB0
+    #   ports:
+    #     - containerPort: 8080
+    #       hostPort: 8080
+    #   env:
+    #     - name: TZ
+    #       value: Asia/Taipei
 
     - name: appdaemon
       image: docker.io/acockburn/appdaemon:latest
