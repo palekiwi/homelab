@@ -54,19 +54,6 @@ spec:
         - name: TZ
           value: Asia/Taipei
 
-    # - name: mqtt
-    #   image: docker.io/library/eclipse-mosquitto
-    #   volumeMounts:
-    #     - mountPath: /etc/localtime
-    #       name: etc-localtime
-    #       readOnly: true
-    #     - mountPath: /mosquitto/data
-    #       name: ha-mqtt-data
-    #     - mountPath: /mosquitto/log
-    #       name: ha-mqtt-log
-    #     - mountPath: /mosquitto/config/mosquitto.conf
-    #       name: ha-mqtt-config
-
     - name: appdaemon
       image: docker.io/acockburn/appdaemon:latest
       volumeMounts:
