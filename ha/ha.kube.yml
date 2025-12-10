@@ -16,21 +16,6 @@ metadata:
   name: ha
 spec:
   containers:
-    - name: homeassistant
-      image: ghcr.io/home-assistant/home-assistant:stable
-      volumeMounts:
-        - mountPath: /etc/localtime
-          name: etc-localtime
-          readOnly: true
-        - mountPath: /config
-          name: ha-homeassistant-config
-      ports:
-        - containerPort: 8123
-          hostPort: 8123
-      env:
-        - name: TZ
-          value: Asia/Taipei
-
     - name: appdaemon
       image: docker.io/acockburn/appdaemon:latest
       volumeMounts:
@@ -54,10 +39,6 @@ spec:
         path: /etc/localtime
         type: File
 
-    - name: ha-homeassistant-config
-      hostPath:
-        path: /srv/ha/homeassistant/config
-        type: Directory
     - name: ha-appdaemon-conf
       hostPath:
         path: /srv/ha/appdaemon/conf
