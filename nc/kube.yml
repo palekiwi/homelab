@@ -39,7 +39,7 @@ spec:
         - "redis-server"
 
     - name: nextcloud
-      image: docker.io/library/nextcloud:28.0.2
+      image: docker.io/library/nextcloud:29.0.16
       volumeMounts:
         - mountPath: /var/www/html
           name: nc-app
