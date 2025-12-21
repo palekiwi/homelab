@@ -2,22 +2,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pg-config
-data:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: nc
-  TZ: Asia/Taipei
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: nc-config
 data:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: nc
-  POSTGRES_HOST: localhost
+  POSTGRES_USER: nextcloud
+  POSTGRES_PASSWORD: nextcloud
+  POSTGRES_DB: nextcloud
+  POSTGRES_HOST: 100.122.42.74
   REDIS_HOST: localhost
   REDIS_PORT: 6379
   NEXTCLOUD_ADMIN_USER: pl
@@ -43,23 +33,13 @@ metadata:
   name: nc
 spec:
   containers:
-    - name: postgres
-      image: docker.io/library/postgres:16.1
-      volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-data
-      envFrom:
-        - configMapRef:
-            name: pg-config
-            optional: false
-
     - name: redis
       image: docker.io/library/redis:latest
       args:
         - "redis-server"
 
     - name: nextcloud
-      image: docker.io/library/nextcloud:28.0.2
+      image: docker.io/library/nextcloud:29.0.16
       volumeMounts:
         - mountPath: /var/www/html
           name: nc-app
@@ -84,9 +64,6 @@ spec:
   restartPolicy: OnFailure
 
   volumes:
-    - name: postgres-data
-      persistentVolumeClaim:
-        claimName: postgres-data
     - name: nc-app
       hostPath:
         path: /srv/nc/app
